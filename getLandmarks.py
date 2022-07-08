@@ -26,11 +26,33 @@ class landmarks():
     
     def pose(self,frame):
         myPose=[]
+        requiredPoints = [0,11,12,13,14,15,16,23,24,25,26,27,28,31,32]
         frameRGB = self.cv2.cvtColor(frame,self.cv2.COLOR_BGR2RGB)
         results = self.findPose.process(frameRGB)
         if results.pose_world_landmarks != None:
-            for lm in results.pose_world_landmarks.landmark:
-                myPose.append((lm.x,lm.y,lm.z))
+            for i,lm in enumerate(results.pose_world_landmarks.landmark):
+                if i in requiredPoints: # collecting required points only
+                    if i==11:
+                        myPose.append((lm.x,lm.y,lm.z))
+                        shoulder1 = vector(lm.x,lm.y,lm.z)
+                        continue
+                    if i==12:
+                        myPose.append((lm.x,lm.y,lm.z))
+                        shoulder2 = vector(lm.x,lm.y,lm.z)
+                        chestPoint = (shoulder1+shoulder2)/2
+                        myPose.append((chestPoint.x,chestPoint.y,chestPoint.z))
+                        continue
+                    if i==23:
+                        myPose.append((lm.x,lm.y,lm.z))
+                        hip1 = vector(lm.x,lm.y,lm.z)
+                        continue
+                    if i==24:
+                        myPose.append((lm.x,lm.y,lm.z))
+                        hip2 = vector(lm.x,lm.y,lm.z)
+                        hipPoint = (hip1+hip2)/2
+                        myPose.append((hipPoint.x,hipPoint.y,hipPoint.z))
+                        continue
+                    myPose.append((lm.x,lm.y,lm.z))
         return myPose
 
     def face(self,frame):#Full Face Landmarks
