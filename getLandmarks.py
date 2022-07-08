@@ -2,27 +2,16 @@
 #opncv-python version = 4.5.4.60
 #mediapipe version = 0.8.9.1
 
-class mpFace:
+from vpython import *
+class landmarks():
     import mediapipe as mp
-    import cv2
+    import cv2  
     def __init__(self):
+        self.findHands=self.mp.solutions.hands.Hands(False,2)
+        self.findPose=self.mp.solutions.pose.Pose()
         self.faceMesh = self.mp.solutions.face_mesh.FaceMesh(refine_landmarks=True)
-    def landMarks(self,frame):#Full Face Landmarks
-        frameRGB = self.cv2.cvtColor(frame,self.cv2.COLOR_BGR2RGB)
-        results = self.faceMesh.process(frameRGB)
-        myFace=[]
-        if results.multi_face_landmarks != None:
-            for faceLandmarks in results.multi_face_landmarks:
-                for lm in faceLandmarks.landmark:
-                    myFace.append((lm.x,lm.y,lm.z))         
-        return myFace
 
-class mpHands:
-    import mediapipe as mp
-    import cv2
-    def __init__(self,maxHands=2):
-        self.findHands=self.mp.solutions.hands.Hands(False,maxHands)
-    def landMarks(self,frame):
+    def hands(self,frame):
         myHands=[]
         frameRGB = self.cv2.cvtColor(frame,self.cv2.COLOR_BGR2RGB)
         results = self.findHands.process(frameRGB)
@@ -34,18 +23,31 @@ class mpHands:
                     myHand.append((lm.x,lm.y,lm.z))
                 myHands.append(((myHand),handLabel))
         return myHands # [((hand_1),handLabel),((hand_2),handLabel)]
-
-#pose
-class mpPose:
-    import mediapipe as mp
-    import cv2 
-    def __init__(self):
-        self.pose=self.mp.solutions.pose.Pose()
-    def landMarks(self,frame):
+    
+    def pose(self,frame):
         myPose=[]
         frameRGB = self.cv2.cvtColor(frame,self.cv2.COLOR_BGR2RGB)
-        results = self.pose.process(frameRGB)
+        results = self.findPose.process(frameRGB)
         if results.pose_world_landmarks != None:
             for lm in results.pose_world_landmarks.landmark:
                 myPose.append((lm.x,lm.y,lm.z))
         return myPose
+
+    def face(self,frame):#Full Face Landmarks
+        frameRGB = self.cv2.cvtColor(frame,self.cv2.COLOR_BGR2RGB)
+        results = self.faceMesh.process(frameRGB)
+        myFace=[]
+        if results.multi_face_landmarks != None:
+            for faceLandmarks in results.multi_face_landmarks:
+                for lm in faceLandmarks.landmark:
+                    myFace.append((lm.x,lm.y,lm.z))         
+        return myFace
+
+    def bone(self):
+        ball = sphere(pos = vector(0,0,0), radius = 0.005,axis =vector(1,0,0))
+        pyramid1 = pyramid(pos = vector(0.02,0,0), size = vector(0.02, 0.02, 0.02), axis = -vector(1,0,0))
+        pyramid2 = pyramid(pos = vector(0.02,0,0), size = vector(0.08, 0.02, 0.02),axis = vector(1,0,0))
+        Bone = compound([ball,pyramid1,pyramid2],origin=vector(0,0,0),axis = vector(1,0,0))
+        return Bone
+
+

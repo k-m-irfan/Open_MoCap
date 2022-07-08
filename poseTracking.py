@@ -4,7 +4,7 @@ import getLandmarks
 
 scene.background = color.white
 
-getPose = getLandmarks.mpPose()
+get = getLandmarks.landmarks()
 
 posePoints = []
 for p in range(33):
@@ -18,12 +18,12 @@ height = int(cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
 while True:
     _, frame = cam.read()
     if _:
-        myPose = getPose.landMarks(frame)
+        myPose = get.pose(frame)
         if myPose != []:
             for indx,lm in enumerate(myPose):
                 pos = vector(lm[0],-lm[1],-lm[2])
                 posePoints[indx].pos = pos
-    cv2.imshow('camera',frame)
+    # cv2.imshow('camera',frame)
     if cv2.waitKey(1) & 0xff == ord('q'): # to quit the camera press 'q'
         print('end')
         break

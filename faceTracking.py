@@ -4,7 +4,7 @@ import getLandmarks
 
 scene.background = color.white
 
-getFace = getLandmarks.mpFace()
+get = getLandmarks.landmarks()
 
 facePoints = []
 for f in range(478):
@@ -18,7 +18,7 @@ height = int(cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
 while True:
     _, frame = cam.read()
     if _:
-        myFace = getFace.landMarks(frame)
+        myFace = get.face(frame)
         if myFace != []:
             for indx,lm in enumerate(myFace):
                 pos = vector(lm[0],-lm[1],-lm[2])
