@@ -26,9 +26,8 @@ height = int(cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
 while True:
     _, frame = cam.read()
     if _:
-        myPose=get.pose(frame)
         myHands = get.hands(frame)
-        if myHands != [] and myPose!=[]:
+        if myHands != []:
             for hand in myHands:
                 if hand[1] == 0:
                     # print('right hand')
@@ -36,12 +35,10 @@ while True:
                         fromPos = vector(-hand[0][links[0]][0],-hand[0][links[0]][1],hand[0][links[0]][2])
                         toPos = vector(-hand[0][links[1]][0],-hand[0][links[1]][1],hand[0][links[1]][2])
                         rightHandBones[i].pos = fromPos+vector(.1,0,0)
-                        # rightHandBones[i].pos = fromPos+vector(-myPose[7][0],-myPose[7][1],myPose[7][2])
                         ax = toPos-fromPos
                         rightHandBones[i].axis = ax
                         length = sqrt(ax.x*ax.x + ax.y*ax.y + ax.z*ax.z)
                         rightHandBones[i].size = vector(length,length*0.2,length*0.2)
-                        # print(myPose[15],myPose[16],hand[0][0])
                             
                 if hand[1] == 1:
                     # print('left hand')
@@ -49,7 +46,6 @@ while True:
                         fromPos = vector(-hand[0][links[0]][0],-hand[0][links[0]][1],hand[0][links[0]][2])
                         toPos = vector(-hand[0][links[1]][0],-hand[0][links[1]][1],hand[0][links[1]][2])
                         leftHandBones[i].pos = fromPos+vector(-.1,0,0)
-                        # leftHandBones[i].pos = fromPos+vector(-myPose[6][0],-myPose[6][1],myPose[6][2])
                         ax = toPos-fromPos # getting axis
                         leftHandBones[i].axis = ax
                         length = sqrt(ax.x*ax.x + ax.y*ax.y + ax.z*ax.z) #getting length

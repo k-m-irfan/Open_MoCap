@@ -19,8 +19,9 @@ class landmarks():
             for handLandmarks, type in zip(results.multi_hand_world_landmarks,results.multi_handedness):
                 myHand = []
                 handLabel = type.classification[0].index
+                bLm = handLandmarks.landmark[0] #hand base landmark coordiante, to shidt origon from centre to wrist
                 for lm in handLandmarks.landmark:
-                    myHand.append((lm.x,lm.y,lm.z))
+                    myHand.append((lm.x-bLm.x,lm.y-bLm.y,lm.z-bLm.z))
                 myHands.append(((myHand),handLabel))
         return myHands # [((hand_1),handLabel),((hand_2),handLabel)]
     
@@ -71,5 +72,3 @@ class landmarks():
         pyramid2 = pyramid(pos = vector(0.02,0,0), size = vector(0.08, 0.02, 0.02),axis = vector(1,0,0))
         Bone = compound([ball,pyramid1,pyramid2],origin=vector(0,0,0),axis = vector(1,0,0))
         return Bone
-
-
